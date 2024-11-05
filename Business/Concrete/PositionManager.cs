@@ -6,16 +6,27 @@ using FluentValidation;
 
 namespace Business.Concrete
 {
-    public class PositionManager(IValidator<Position> _validator) : IPositionService
+    public class PositionManager : IPositionService
     {
         IPositionDal _positionDal = new PositionDal();
+        private readonly IValidator<Position> _validator;
+        public PositionManager(IValidator<Position> validator)
+        {
+            _validator = validator;
+        }
+
+        public PositionManager()
+        {
+            
+        }
+
         public void Add(Position position)
         {
-            var validationRes = _validator.Validate(position);
-            if (validationRes.IsValid)
-            {
+            //var validationRes = _validator.Validate(position);
+            //if (validationRes.IsValid)
+            //{
                 _positionDal.Add(position);
-            }
+            //}
         }
 
         public void Delete(int id)

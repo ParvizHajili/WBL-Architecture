@@ -1,3 +1,7 @@
+using Business.Validations;
+using Entites.TableModels;
+using FluentValidation;
+
 namespace WebUI
 {
     public class Program
@@ -9,6 +13,7 @@ namespace WebUI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<IValidator<Position>,PositionValidation>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
