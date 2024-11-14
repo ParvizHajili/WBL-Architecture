@@ -1,4 +1,8 @@
+using Business.Abstract;
+using Business.Concrete;
 using Business.Validations;
+using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entites.TableModels;
 using FluentValidation;
 
@@ -13,7 +17,10 @@ namespace WebUI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<IPositionDal, PositionDal>();
+            builder.Services.AddScoped<IPositionService,PositionManager>();
             builder.Services.AddScoped<IValidator<Position>,PositionValidation>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

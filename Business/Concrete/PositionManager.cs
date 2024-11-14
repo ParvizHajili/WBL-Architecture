@@ -1,6 +1,10 @@
 ﻿using Business.Abstract;
+using Business.Validations;
+using Core.Extensions;
+using Core.Results.Abstract;
+using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
-using DataAccess.Concrete;
 using Entites.TableModels;
 using FluentValidation;
 
@@ -8,49 +12,43 @@ namespace Business.Concrete
 {
     public class PositionManager : IPositionService
     {
-        IPositionDal _positionDal = new PositionDal();
+        private readonly IPositionDal _positionDal;
         private readonly IValidator<Position> _validator;
-        public PositionManager(IValidator<Position> validator)
+        public PositionManager(IValidator<Position> validator, IPositionDal positionDal)
         {
             _validator = validator;
+            _positionDal = positionDal;
         }
 
-        public PositionManager()
+        public IResult Add(Position position)
         {
-            
+            var validation = ValidationTool.Validate(new PositionValidation(),position,out List<ValidationErrorModel> errors);
+            if (!validation)
+                return new ErrorResult(errors.ValidationErrorMessageNewLine());
+
+            _positionDal.Add(position);
+
+            return new SuccessResult("Vəzifə uğurla əlavə olundu");
         }
 
-        public void Add(Position position)
+        public IResult Delete(int id)
         {
-            //var validationRes = _validator.Validate(position);
-            //if (validationRes.IsValid)
-            //{
-                _positionDal.Add(position);
-            //}
+            throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public IDataResult<List<Position>> GetAll()
         {
-            var data = _positionDal.GetById(id);
-
-            data.IsDeleted = id;
-
-            _positionDal.Update(data);
+            return new SuccessDataResult<List<Position>>(_positionDal.GetAll(x => x.IsDeleted == 0));
         }
 
-        public List<Position> GetAll()
+        public IDataResult<Position> GetById(int id)
         {
-            return _positionDal.GetAll(x => x.IsDeleted == 0);
+            throw new NotImplementedException();
         }
 
-        public Position GetById(int id)
+        public IResult Update(Position position)
         {
-            return _positionDal.GetById(id);
-        }
-
-        public void Update(Position position)
-        {
-            _positionDal.Update(position);
+            throw new NotImplementedException();
         }
     }
 }

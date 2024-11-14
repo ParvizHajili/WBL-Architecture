@@ -8,11 +8,15 @@ namespace WebUI.Areas.Dashboard.Controllers
     [Area("Dashboard")]
     public class PositionController : Controller
     {
-        IPositionService _positionService = new PositionManager();
+        private readonly IPositionService _positionService;
+        public PositionController(IPositionService positionService)
+        {
+            _positionService = positionService;
+        }
 
         public IActionResult Index()
         {
-            var positions = _positionService.GetAll();
+            var positions = _positionService.GetAll().Data;
 
             return View(positions);
         }
@@ -26,7 +30,14 @@ namespace WebUI.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(Position position)
         {
-            _positionService.Add(position);
+            var result = _positionService.Add(position);
+
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelError("", result.Message);
+
+                return View(position);
+            }
 
             return RedirectToAction("Index");
         }
