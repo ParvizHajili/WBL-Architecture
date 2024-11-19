@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Validations;
+using Core.Constants;
 using Core.Extensions;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
@@ -22,18 +23,25 @@ namespace Business.Concrete
 
         public IResult Add(Position position)
         {
-            var validation = ValidationTool.Validate(new PositionValidation(),position,out List<ValidationErrorModel> errors);
+            var validation = ValidationTool.Validate(new PositionValidation(), position, out List<ValidationErrorModel> errors);
             if (!validation)
                 return new ErrorResult(errors.ValidationErrorMessageNewLine());
 
             _positionDal.Add(position);
 
-            return new SuccessResult("Vəzifə uğurla əlavə olundu");
+            return new SuccessResult(DefaultConstantValues.DATA_ADDED_SUCCESFULLY);
         }
 
         public IResult Delete(int id)
         {
-            throw new NotImplementedException();
+            var deletedEntity = _positionDal.GetById(id);
+
+            deletedEntity.IsDeleted = id;
+            deletedEntity.LastUpdatedDate = DateTime.Now;
+
+            _positionDal.Update(deletedEntity);
+
+            return new SuccessResult(DefaultConstantValues.DATA_DELETED_SUCCESFULLY);
         }
 
         public IDataResult<List<Position>> GetAll()
@@ -43,12 +51,20 @@ namespace Business.Concrete
 
         public IDataResult<Position> GetById(int id)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<Position>(_positionDal.GetById(id));
         }
 
         public IResult Update(Position position)
         {
-            throw new NotImplementedException();
+            var validationResult = ValidationTool.Validate(new PositionValidation(), position, out List<ValidationErrorModel> errors);
+            if (!validationResult)
+                return new ErrorResult(errors.ValidationErrorMessageNewLine());
+
+            position.LastUpdatedDate = DateTime.Now;
+
+            _positionDal.Update(position);
+
+            return new SuccessResult(DefaultConstantValues.DATA_UPDATED_SUCCESFULLY);
         }
     }
 }

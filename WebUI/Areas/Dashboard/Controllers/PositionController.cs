@@ -42,6 +42,28 @@ namespace WebUI.Areas.Dashboard.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var data = _positionService.GetById(id).Data;
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Position position)
+        {
+            var result = _positionService.Update(position);
+
+            if(!result.IsSuccess)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View(position);
+            }
+
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public IActionResult Delete(int id)
         {

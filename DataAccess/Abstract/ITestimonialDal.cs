@@ -3,5 +3,8 @@ using Entites.TableModels;
 
 namespace DataAccess.Abstract
 {
-    public interface ITestimonialDal :IBaseRepository<Testimonial> { }
+    public interface ITestimonialDal : IBaseRepository<Testimonial>
+    {
+        List<Testimonial> GetAllTestimonial();
+    }
 }

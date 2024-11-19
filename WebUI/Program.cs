@@ -21,6 +21,10 @@ namespace WebUI
             builder.Services.AddScoped<IPositionService,PositionManager>();
             builder.Services.AddScoped<IValidator<Position>,PositionValidation>();
 
+
+            builder.Services.AddScoped<ITestimonialService,TestimonialManager>();
+            builder.Services.AddScoped<ITestimonialDal,TestimonialDal>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

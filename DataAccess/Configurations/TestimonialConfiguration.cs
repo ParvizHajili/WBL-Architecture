@@ -33,13 +33,10 @@ namespace DataAccess.Configurations
 
             builder.HasOne(x => x.Position)
                 .WithMany(x => x.Testimonials)
-                .HasForeignKey(x => x.PositonId);
+                .HasForeignKey(x => x.PositionId);
 
-            builder.Property(x => x.PositonId)
-               .IsRequired();
 
-            builder.HasIndex(x => x.FirstName)
-                ;
+            builder.HasIndex(x => x.FirstName);
 
             builder.HasIndex(x => new { x.FirstName, x.IsDeleted })
                 .IsUnique();

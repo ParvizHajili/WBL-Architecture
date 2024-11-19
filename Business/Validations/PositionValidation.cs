@@ -1,4 +1,5 @@
-﻿using Entites.TableModels;
+﻿using Core.Constants;
+using Entites.TableModels;
 using FluentValidation;
 
 namespace Business.Validations
@@ -9,11 +10,11 @@ namespace Business.Validations
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("Vəzifə adı mütləq daxil edilməlidir")
+                .WithMessage(DefaultConstantValues.GetRequiredMessage("Vəzifə adı"))
                 .MinimumLength(3)
-                .WithMessage("Vəzifə adı minimum 3 simvol ola bilər")
+                .WithMessage(DefaultConstantValues.GetMinimumLengthMessage("Vəzifə adı", 3))
                 .MaximumLength(100)
-                .WithMessage("Vəzifə adı maksimum 100 simvol ola bilər");
+                .WithMessage(DefaultConstantValues.GetMaxLengthMessage("Vəzifə adı", 100));
         }
     }
 }
