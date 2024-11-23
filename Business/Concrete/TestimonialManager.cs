@@ -1,12 +1,14 @@
 ﻿using Business.Abstract;
 using Business.Validations;
+using Core.Constants;
+using Core.Extensions;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using Core.Validation;
 using DataAccess.Abstract;
 using Entites.TableModels;
-using Core.Extensions;
-using Core.Constants;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -18,8 +20,10 @@ namespace Business.Concrete
             _testimonialDal = testimonialDal;
         }
 
-        public IResult Add(Testimonial model)
+        public Core.Results.Abstract.IResult Add(Testimonial model, IFormFile imageUrl, IWebHostEnvironment webrootPath)
         {
+            model.ImageUrl = PictureHelper.UploadImage(imageUrl, webrootPath.WebRootPath);
+
             var validationResult = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
             if (!validationResult)
                 return new ErrorResult(errors.ValidationErrorMessageNewLine());
@@ -29,7 +33,7 @@ namespace Business.Concrete
             return new SuccessResult(DefaultConstantValues.DATA_ADDED_SUCCESFULLY);
         }
 
-        public IResult Delete(int id)
+        public Core.Results.Abstract.IResult Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -44,9 +48,26 @@ namespace Business.Concrete
             return new SuccessDataResult<Testimonial>(_testimonialDal.GetById(id));
         }
 
-        public IResult Update(Testimonial model)
+        public Core.Results.Abstract.IResult Update(Testimonial model, IFormFile imageUrl, IWebHostEnvironment webrootPath)
         {
-            throw new NotImplementedException();
+            var existingData = _testimonialDal.GetById(model.Id);
+
+            if (imageUrl is null)
+            {
+                model.ImageUrl = existingData.ImageUrl;
+            }
+            else
+            {
+                model.ImageUrl = PictureHelper.UploadImage(imageUrl, webrootPath.WebRootPath);
+            }
+
+            var validationResult = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
+            if (!validationResult)
+                return new ErrorResult(errors.ValidationErrorMessageNewLine());
+
+            _testimonialDal.Update(model);
+
+            return new SuccessResult(DefaultConstantValues.DATA_UPDATED_SUCCESFULLY);
         }
     }
 }

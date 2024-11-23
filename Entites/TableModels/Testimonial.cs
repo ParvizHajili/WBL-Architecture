@@ -8,7 +8,6 @@ namespace Entites.TableModels
         public string LastName { get; set; }
         public string ImageUrl { get; set; }
         public string Message { get; set; }
-        //todo bura dəyişilməlidir
         public int PositionId { get; set; }
         public Position Position { get; set; }
     }

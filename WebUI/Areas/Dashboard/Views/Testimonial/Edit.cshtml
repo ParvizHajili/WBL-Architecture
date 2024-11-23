@@ -3,25 +3,26 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label">Müştəri Adı</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="LastName" class="control-label">Müştəri SoyAdı</label>
+                <label asp-for="LastName" class="control-label">Müştəri Soyadı</label>
                 <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Message" class="control-label">Müştəri Mesajı</label>
-                <textarea asp-for="Message" class="form-control"> </textarea>
+                <input asp-for="Message" class="form-control" />
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PositionId" class="control-label">Vəzifə</label>
+                <label asp-for="PositionId" class="control-label">Kateqoriya</label>
                 <select asp-for="PositionId" class="form-control">
                     @foreach (var item in ViewData["Positions"] as IEnumerable<Position>)
                     {
@@ -30,12 +31,18 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label">Şəkil</label>
-                <input asp-for="ImageUrl" name="ImageUrl" class="form-control" type="file" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            <div class="form-group" style="min-height:300px;">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="img-fluid" src="@Model.ImageUrl" />
+                    </div>
+                    <div class="card p-3 mt-3">
+                        <input type="file" asp-for="ImageUrl" name="ImageUrl" />
+                    </div>
+                </div>
             </div>
 
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="@DefaultConstantValues.ADD_MESSAGE" class="btn btn-primary" />
             </div>

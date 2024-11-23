@@ -9,10 +9,14 @@ namespace WebUI.Areas.Dashboard.Controllers
     {
         private readonly ITestimonialService _testimonialService;
         private readonly IPositionService _positionService;
-        public TestimonialController(ITestimonialService testimonialService, IPositionService positionService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public TestimonialController(ITestimonialService testimonialService,
+            IWebHostEnvironment webHostEnvironment,
+            IPositionService positionService)
         {
             _testimonialService = testimonialService;
             _positionService = positionService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -25,20 +29,45 @@ namespace WebUI.Areas.Dashboard.Controllers
 
         public IActionResult Create()
         {
-            ViewData["Postions"] = _positionService.GetAll().Data;
+            ViewData["Positions"] = _positionService.GetAll().Data;
 
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Testimonial testimonial)
+        public IActionResult Create(Testimonial testimonial, IFormFile imageUrl)
         {
-            var result = _testimonialService.Add(testimonial);
+            var result = _testimonialService.Add(testimonial, imageUrl, _webHostEnvironment);
 
             if (!result.IsSuccess)
             {
                 ModelState.AddModelError("", result.Message);
 
+                return View(testimonial);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var data = _testimonialService.GetById(id).Data;
+
+            ViewData["Positions"] = _positionService.GetAll().Data;
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Testimonial testimonial, IFormFile imageUrl)
+        {
+            var result = _testimonialService.Update(testimonial,imageUrl, _webHostEnvironment);
+
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelError("", result.Message);
+                ViewData["Positions"] = _positionService.GetAll().Data;
                 return View(testimonial);
             }
 
