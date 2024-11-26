@@ -1,5 +1,4 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
 using Entites.TableModels;
 using Microsoft.AspNetCore.Mvc;
 

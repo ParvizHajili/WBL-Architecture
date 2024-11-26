@@ -1,9 +1,11 @@
 ﻿using Entites.TableModels;
+using Entites.TableModels.Membership;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Contexxt
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,int,ApplicationUserClaim,ApplicationUserRole,ApplicationUserLogin, ApplicationRoleClaim,ApplicationUserToken>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

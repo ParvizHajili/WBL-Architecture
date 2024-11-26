@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
 using Entites.TableModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Areas.Dashboard.Controllers
 {
+    [Authorize]
     [Area("Dashboard")]
     public class TestimonialController : Controller
     {
@@ -62,7 +64,7 @@ namespace WebUI.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(Testimonial testimonial, IFormFile imageUrl)
         {
-            var result = _testimonialService.Update(testimonial,imageUrl, _webHostEnvironment);
+            var result = _testimonialService.Update(testimonial, imageUrl, _webHostEnvironment);
 
             if (!result.IsSuccess)
             {

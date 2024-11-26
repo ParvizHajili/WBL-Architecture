@@ -3,8 +3,11 @@ using Business.Concrete;
 using Business.Validations;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using DataAccess.Contexxt;
 using Entites.TableModels;
+using Entites.TableModels.Membership;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebUI
 {
@@ -17,13 +20,37 @@ namespace WebUI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
+
+            builder.Services.AddDbContext<ApplicationDbContext>()
+                .AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 3;
+            });
+
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                options.Cookie.Name = "FruithkaDb";
+                options.Cookie.HttpOnly = true;
+            });
+
             builder.Services.AddScoped<IPositionDal, PositionDal>();
-            builder.Services.AddScoped<IPositionService,PositionManager>();
-            builder.Services.AddScoped<IValidator<Position>,PositionValidation>();
+            builder.Services.AddScoped<IPositionService, PositionManager>();
+            builder.Services.AddScoped<IValidator<Position>, PositionValidation>();
 
 
-            builder.Services.AddScoped<ITestimonialService,TestimonialManager>();
-            builder.Services.AddScoped<ITestimonialDal,TestimonialDal>();
+            builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
+            builder.Services.AddScoped<ITestimonialDal, TestimonialDal>();
 
             var app = builder.Build();
 
@@ -40,6 +67,7 @@ namespace WebUI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             //app.MapControllerRoute(
