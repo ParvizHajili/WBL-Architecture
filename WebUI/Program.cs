@@ -52,7 +52,11 @@ namespace WebUI
             builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
             builder.Services.AddScoped<ITestimonialDal, TestimonialDal>();
 
-            var app = builder.Build();
+
+			builder.Services.AddScoped<IAboutService, AboutManager>();
+			builder.Services.AddScoped<IAboutDal, AboutDal>();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

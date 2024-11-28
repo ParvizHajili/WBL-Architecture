@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Areas.Dashboard.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Area("Dashboard")]
     public class TestimonialController : Controller
     {
@@ -71,6 +71,19 @@ namespace WebUI.Areas.Dashboard.Controllers
                 ModelState.AddModelError("", result.Message);
                 ViewData["Positions"] = _positionService.GetAll().Data;
                 return View(testimonial);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var result = _testimonialService.Delete(id);
+
+            if (result.IsSuccess)
+            {
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");

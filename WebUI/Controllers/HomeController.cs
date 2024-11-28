@@ -1,32 +1,31 @@
+using Business.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using WebUI.Models;
+using WebUI.ViewModels;
 
 namespace WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ITestimonialService _testimonialService;
+        private readonly IAboutService _aboutService;
+        public HomeController(ITestimonialService testimonialService, IAboutService aboutService)
         {
-            _logger = logger;
+            _testimonialService = testimonialService;
+            _aboutService = aboutService;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
+            var testimonials = _testimonialService.GetAll().Data;
+            var about = _aboutService.GetAll().Data;
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            var viewModel = new HomeViewModel()
+            {
+                Testimonials = testimonials,
+                About = about
+            };
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(viewModel);
         }
     }
 }

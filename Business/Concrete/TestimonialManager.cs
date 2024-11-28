@@ -35,7 +35,14 @@ namespace Business.Concrete
 
         public Core.Results.Abstract.IResult Delete(int id)
         {
-            throw new NotImplementedException();
+            var model = GetById(id).Data;
+
+            model.IsDeleted = id;
+            model.LastUpdatedDate = DateTime.Now;
+
+            _testimonialDal.Update(model);
+
+            return new SuccessResult(DefaultConstantValues.DATA_DELETED_SUCCESFULLY);
         }
 
         public IDataResult<List<Testimonial>> GetAll()
